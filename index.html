@@ -825,6 +825,12 @@
 
     async function loadFlightsForDestination(airportCodes) {
       if (!airportCodes || airportCodes.length === 0) return;
+      if (!departCode) {
+        flightResults.innerHTML = '<div class="flight-loading">Location parameter required for flight lookup.</div>';
+        flightInput.removeAttribute("readonly");
+        flightInput.placeholder = "Enter flight code manually";
+        return;
+      }
 
       flightInput.value = "";
       flightResults.innerHTML = '<div class="flight-loading">Loading flights...</div>';
@@ -832,18 +838,17 @@
 
       try {
         const flightDate = document.getElementById("outDate").value;
-        // Query flights for all destination airports
-        const promises = airportCodes.map(async (arrivalCode) => {
-          const apiUrl = `https://api.holidayextras.com/v1/flight?location=${departCode}&arrive=${arrivalCode}&departDate=${flightDate}`;
-          const response = await fetch(apiUrl);
-          if (response.ok) {
-            return await response.json();
-          }
-          return [];
-        });
+        // Use searchDayFlights with comma-separated destination airports
+        const destination = airportCodes.join(',');
+        const apiUrl = `https://api.holidayextras.com/v1/searchDayFlights?location=${departCode}&destination=${destination}&departDate=${flightDate}&fullResults=true`;
 
-        const results = await Promise.all(promises);
-        const allFlights = results.flat();
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const allFlights = await response.json();
 
         if (!allFlights || allFlights.length === 0) {
           flightResults.innerHTML = '<div class="flight-loading">No flights found for this destination.</div>';
