@@ -54,28 +54,35 @@
     .banner {
       position: relative;
       width: 100%;
-      height: 300px;
-      background: linear-gradient(135deg, #1a4d6f 0%, #2e7ba5 50%, #4a9bc9 100%);
+      height: 400px;
+      background: #1a2a3a;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
     }
 
-    .banner::before {
+    .banner-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .banner::after {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.08) 0%, transparent 50%);
+      background: linear-gradient(to right, rgba(0,0,0,.6) 0%, rgba(0,0,0,.3) 60%, rgba(0,0,0,.1) 100%);
     }
 
     .banner-overlay {
       position: relative;
       text-align: center;
       padding: 0 20px;
-      z-index: 1;
+      z-index: 2;
     }
 
     .banner-badge {
@@ -109,7 +116,7 @@
 
     @media (max-width: 767px) {
       .banner {
-        height: 250px;
+        height: 300px;
       }
 
       .banner-headline {
@@ -446,6 +453,7 @@
 
   <!-- Banner -->
   <div class="banner">
+    <img class="banner-img" src="assets/banner.jpg" alt="Airport parking meet and greet">
     <div class="banner-overlay">
       <div class="banner-badge">Meet & Greet Available</div>
       <h2 class="banner-headline" id="bannerHeadline">Save up to 60% on Airport Parking</h2>
