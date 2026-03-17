@@ -261,31 +261,31 @@
       cursor: not-allowed;
     }
 
-    /* Destination Lookup Section - Hidden by default */
-    .destination-section {
+    /* Flight Lookup Section - Hidden by default */
+    .flight-section {
       display: none;
       margin-top: 20px;
       padding-top: 20px;
       border-top: 1px solid #dfe3e5;
     }
 
-    .destination-section.show {
+    .flight-section.show {
       display: block;
     }
 
-    .destination-section-title {
+    .flight-section-title {
       font-size: 16px;
       font-weight: 700;
       color: #484e52;
       margin-bottom: 15px;
     }
 
-    .form-group-destination {
+    .form-group-flight {
       position: relative;
     }
 
-    /* Destination Results Dropdown */
-    .destination-results {
+    /* Flight Results Dropdown */
+    .flight-results {
       position: absolute;
       top: 100%;
       left: 0;
@@ -301,54 +301,54 @@
       display: none;
     }
 
-    .destination-results.show {
+    .flight-results.show {
       display: block;
     }
 
-    .destination-result-item {
+    .flight-result-item {
       padding: 12px;
       cursor: pointer;
       transition: background-color 0.2s;
       border-bottom: 1px solid #f5f5f5;
     }
 
-    .destination-result-item:last-child {
+    .flight-result-item:last-child {
       border-bottom: none;
     }
 
-    .destination-result-item:hover {
+    .flight-result-item:hover {
       background: #f5f5f5;
     }
 
-    .destination-result-item.selected {
+    .flight-result-item.selected {
       background: #fff5f2;
       border-left: 3px solid #c74c28;
     }
 
-    .destination-result-header {
+    .flight-result-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 4px;
     }
 
-    .destination-city {
+    .flight-code {
       font-weight: 700;
       color: #c74c28;
       font-size: 16px;
     }
 
-    .destination-flights {
+    .flight-times {
       color: #484e52;
       font-size: 14px;
     }
 
-    .destination-country {
+    .flight-route {
       color: #767d7d;
       font-size: 13px;
     }
 
-    .destination-loading {
+    .flight-loading {
       padding: 12px;
       text-align: center;
       color: #767d7d;
@@ -558,11 +558,11 @@
         </div>
 
         <!-- Destination Lookup Section - Appears after dates are selected -->
-        <div id="destinationSection" class="destination-section">
-          <div class="destination-section-title">Where are you flying to? <span class="hx-search-forms_label-optional">(optional)</span></div>
+        <div id="destinationSection" class="flight-section">
+          <div class="flight-section-title">Where are you flying to? <span class="hx-search-forms_label-optional">(optional)</span></div>
 
-          <div class="form-group form-group-destination">
-            <label class="hx-search-forms_label" for="destinationSearch">Destination City</label>
+          <div class="form-group form-group-flight">
+            <label class="hx-search-forms_label" for="destinationSearch">Destination</label>
             <input
               type="text"
               id="destinationSearch"
@@ -570,7 +570,25 @@
               placeholder="e.g. New York, Paris, Dubai"
               autocomplete="off"
             >
-            <div id="destinationResults" class="destination-results"></div>
+            <div id="destinationResults" class="flight-results"></div>
+          </div>
+        </div>
+
+        <!-- Flight Choice Section - Appears after destination is selected -->
+        <div id="flightSection" class="flight-section">
+          <div class="flight-section-title">Choose your flight <span class="hx-search-forms_label-optional">(optional)</span></div>
+
+          <div class="form-group form-group-flight">
+            <label class="hx-search-forms_label" for="flightCode">Flight Number</label>
+            <input
+              type="text"
+              id="flightCode"
+              class="hx-search-forms_text-input"
+              placeholder="Select from available flights"
+              autocomplete="off"
+              readonly
+            >
+            <div id="flightResults" class="flight-results"></div>
           </div>
         </div>
 
@@ -675,20 +693,17 @@
 
     // Show destination section after dates are selected
     const destinationSection = document.getElementById("destinationSection");
+    const flightSection = document.getElementById("flightSection");
     const outDateInput = document.getElementById("outDate");
     const inDateInput = document.getElementById("inDate");
 
     let availableDestinations = [];
-    let destinationsLoaded = false;
+    let selectedDestination = null;
 
     function checkDatesAndShowDestination() {
       if (outDateInput.value && inDateInput.value && departCode) {
         destinationSection.classList.add("show");
-
-        // Load destinations if not already loaded
-        if (!destinationsLoaded) {
-          loadDestinations();
-        }
+        loadDestinations();
       }
     }
 
@@ -706,7 +721,6 @@
         }
 
         availableDestinations = await response.json();
-        destinationsLoaded = true;
       } catch (error) {
         console.error('Destinations lookup error:', error);
       }
@@ -718,9 +732,9 @@
         const newInDate = dateStrPlus(this.value, 8);
         document.getElementById("inDate").value = newInDate;
       }
-
-      // Reset destinations when date changes
-      destinationsLoaded = false;
+      // Reset destination/flight selection when date changes
+      selectedDestination = null;
+      flightSection.classList.remove("show");
       checkDatesAndShowDestination();
     });
 
@@ -729,9 +743,8 @@
     // Check on load in case dates are pre-filled
     checkDatesAndShowDestination();
 
-    // Destination lookup functionality
+    // Destination search functionality
     let destinationLookupTimeout;
-    let selectedDestination = null;
     const destinationInput = document.getElementById("destinationSearch");
     const destinationResults = document.getElementById("destinationResults");
 
@@ -747,7 +760,7 @@
 
       destinationLookupTimeout = setTimeout(function() {
         if (!availableDestinations || availableDestinations.length === 0) {
-          destinationResults.innerHTML = '<div class="destination-loading">Loading destinations...</div>';
+          destinationResults.innerHTML = '<div class="flight-loading">Loading destinations...</div>';
           destinationResults.classList.add("show");
           return;
         }
@@ -760,7 +773,7 @@
         );
 
         if (filtered.length === 0) {
-          destinationResults.innerHTML = '<div class="destination-loading">No destinations found</div>';
+          destinationResults.innerHTML = '<div class="flight-loading">No destinations found</div>';
           destinationResults.classList.add("show");
           return;
         }
@@ -770,15 +783,15 @@
           const city = dest.city || "";
           const country = dest.country || "";
           const count = dest.count || 0;
-          const airports = dest.airports || [];
+          const airports = (dest.airports || []).join(',');
 
           html += `
-            <div class="destination-result-item" data-airports="${airports.join(',')}">
-              <div class="destination-result-header">
-                <div class="destination-city">${city}</div>
-                <div class="destination-flights">${count} flight${count !== 1 ? 's' : ''}</div>
+            <div class="flight-result-item" data-city="${city}" data-airports="${airports}">
+              <div class="flight-result-header">
+                <div class="flight-code">${city}</div>
+                <div class="flight-times">${count} flight${count !== 1 ? 's' : ''}</div>
               </div>
-              <div class="destination-country">${country}</div>
+              <div class="flight-route">${country}</div>
             </div>
           `;
         });
@@ -787,22 +800,110 @@
         destinationResults.classList.add("show");
 
         // Add click handlers
-        document.querySelectorAll(".destination-result-item").forEach(item => {
+        document.querySelectorAll("#destinationResults .flight-result-item").forEach(item => {
           item.addEventListener("click", function() {
+            const city = this.getAttribute("data-city");
             const airports = this.getAttribute("data-airports");
-            const city = this.querySelector(".destination-city").textContent;
-            selectedDestination = airports;
+            selectedDestination = { city, airports: airports.split(',') };
             destinationInput.value = city;
             destinationResults.classList.remove("show");
+
+            // Show flight section and load flights for this destination
+            flightSection.classList.add("show");
+            loadFlightsForDestination(selectedDestination.airports);
           });
         });
       }, 500);
     });
 
-    // Close dropdown when clicking outside
+    // Load flights for selected destination
+    let selectedFlightCode = "";
+    const flightInput = document.getElementById("flightCode");
+    const flightResults = document.getElementById("flightResults");
+
+    async function loadFlightsForDestination(airportCodes) {
+      if (!airportCodes || airportCodes.length === 0) return;
+
+      flightInput.value = "";
+      flightResults.innerHTML = '<div class="flight-loading">Loading flights...</div>';
+      flightResults.classList.add("show");
+
+      try {
+        const flightDate = document.getElementById("outDate").value;
+        // Query flights for all destination airports
+        const promises = airportCodes.map(async (arrivalCode) => {
+          const apiUrl = `https://api.holidayextras.com/v1/flight?location=${departCode}&arrive=${arrivalCode}&departDate=${flightDate}`;
+          const response = await fetch(apiUrl);
+          if (response.ok) {
+            return await response.json();
+          }
+          return [];
+        });
+
+        const results = await Promise.all(promises);
+        const allFlights = results.flat();
+
+        if (!allFlights || allFlights.length === 0) {
+          flightResults.innerHTML = '<div class="flight-loading">No flights found for this destination.</div>';
+          flightInput.removeAttribute("readonly");
+          flightInput.placeholder = "Or enter flight code manually";
+          return;
+        }
+
+        let html = '';
+        allFlights.forEach(f => {
+          const code = (f.flight && f.flight.code) || "";
+          const airline = (f.flight && f.flight.carrier && f.flight.carrier.name) || "";
+          const depTime = (f.departure && f.departure.time) || "";
+          const arrTime = (f.arrival && f.arrival.time) || "";
+          const depIata = (f.departure && f.departure.airport_iata) || "";
+          const arrIata = (f.arrival && f.arrival.airport_iata) || "";
+          const depAirport = (f.departure && f.departure.airport) || depIata;
+          const arrAirport = (f.arrival && f.arrival.airport) || arrIata;
+
+          html += `
+            <div class="flight-result-item" data-code="${code}">
+              <div class="flight-result-header">
+                <div class="flight-code">${code}</div>
+                <div class="flight-times">${depTime} → ${arrTime}</div>
+              </div>
+              <div class="flight-route">${airline ? airline + ' • ' : ''}${depAirport} → ${arrAirport}</div>
+            </div>
+          `;
+        });
+
+        flightResults.innerHTML = html;
+        flightResults.classList.add("show");
+
+        // Add click handlers
+        document.querySelectorAll("#flightResults .flight-result-item").forEach(item => {
+          item.addEventListener("click", function() {
+            const code = this.getAttribute("data-code");
+            selectedFlightCode = code;
+            flightInput.value = code;
+            flightResults.classList.remove("show");
+          });
+        });
+      } catch (error) {
+        console.error('Flight lookup error:', error);
+        flightResults.innerHTML = '<div class="flight-loading">Unable to load flights. Please try again.</div>';
+      }
+    }
+
+    // Click on flight input to show dropdown
+    flightInput.addEventListener("click", function() {
+      if (flightResults.innerHTML && flightResults.innerHTML.includes("flight-result-item")) {
+        flightResults.classList.add("show");
+      }
+    });
+
+    // Close dropdowns when clicking outside
     document.addEventListener("click", function(e) {
       if (!destinationInput.contains(e.target) && !destinationResults.contains(e.target)) {
         destinationResults.classList.remove("show");
+      }
+      if (!flightInput.contains(e.target) && !flightResults.contains(e.target)) {
+        flightResults.classList.remove("show");
       }
     });
 
@@ -814,6 +915,8 @@
       const outTime = document.getElementById("outTime").value;
       const inDate = document.getElementById("inDate").value;
       const inTime = document.getElementById("inTime").value;
+      const manualFlightCode = document.getElementById("flightCode").value.trim();
+      const flightCode = selectedFlightCode || manualFlightCode || flightParam;
 
       // Build search URL - parking stays on www.holidayextras.com
       const host = window.location.host;
@@ -822,7 +925,7 @@
         ? "www.holidayextras.com"
         : host;
 
-      const searchUrl = `https://${basedomain}/static/?selectProduct=cp&#/categories?agent=${agent}&ppts=&customer_ref=&lang=en&adults=2&depart=${departCode || 'LGW'}&terminal=&arrive=&flight=${flightParam}&in=${inDate}&out=${outDate}&park_from=${outTime}&park_to=${inTime}&filter_meetandgreet=&filter_parkandride=&children=0&infants=0&redirectReferal=carpark&from_categories=true&adcode=${adcode}&promotionCode=${promotionCode}`;
+      const searchUrl = `https://${basedomain}/static/?selectProduct=cp&#/categories?agent=${agent}&ppts=&customer_ref=&lang=en&adults=2&depart=${departCode || 'LGW'}&terminal=&arrive=&flight=${flightCode}&in=${inDate}&out=${outDate}&park_from=${outTime}&park_to=${inTime}&filter_meetandgreet=&filter_parkandride=&children=0&infants=0&redirectReferal=carpark&from_categories=true&adcode=${adcode}&promotionCode=${promotionCode}`;
 
       window.location.href = searchUrl;
     });
