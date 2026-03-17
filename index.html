@@ -50,6 +50,77 @@
       color: #484e52;
     }
 
+    /* Banner */
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(135deg, #1a4d6f 0%, #2e7ba5 50%, #4a9bc9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.08) 0%, transparent 50%);
+    }
+
+    .banner-overlay {
+      position: relative;
+      text-align: center;
+      padding: 0 20px;
+      z-index: 1;
+    }
+
+    .banner-badge {
+      display: inline-block;
+      background: #c74c28;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 3px;
+      margin-bottom: 15px;
+    }
+
+    .banner-headline {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+    }
+
+    .banner-subheadline {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.95);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 767px) {
+      .banner {
+        height: 250px;
+      }
+
+      .banner-headline {
+        font-size: 26px;
+      }
+
+      .banner-subheadline {
+        font-size: 16px;
+      }
+    }
+
     /* Main Content */
     .container {
       max-width: 600px;
@@ -373,6 +444,15 @@
     </div>
   </div>
 
+  <!-- Banner -->
+  <div class="banner">
+    <div class="banner-overlay">
+      <div class="banner-badge">Meet & Greet Available</div>
+      <h2 class="banner-headline" id="bannerHeadline">Save up to 60% on Airport Parking</h2>
+      <p class="banner-subheadline">Secure your parking today and travel with confidence</p>
+    </div>
+  </div>
+
   <!-- Main Content -->
   <div class="container">
     <!-- Search Card -->
@@ -555,6 +635,7 @@
 
     // Update page title and headings with airport name
     document.title = `${airportName} Parking`;
+    document.getElementById("bannerHeadline").textContent = `Save up to 60% on ${airportName} Parking`;
     document.getElementById("searchCardTitle").textContent = `Search ${airportName} Parking`;
 
     // Date helper functions
