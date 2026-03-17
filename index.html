@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Airport Parking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Ubuntu, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #484e52;
+      background: #f5f5f5;
+    }
+
+    /* Header */
+    .header {
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      fill: #c74c28;
+    }
+
+    .brand-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: #484e52;
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Search Card */
+    .search-card {
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .search-card-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #484e52;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .product-icon {
+      width: 28px;
+      height: 28px;
+      fill: #c74c28;
+      flex: 0 0 auto;
+    }
+
+    /* Vertical Form Layout */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .hx-search-forms_label {
+      font-size: 16px;
+      font-weight: 400;
+      color: #484e52;
+      margin-bottom: 8px;
+      display: block;
+      line-height: 25px;
+    }
+
+    .hx-search-forms_label-optional {
+      font-size: 14px;
+      color: #767d7d;
+      font-weight: 300;
+    }
+
+    .hx-search-forms_text-input,
+    .hx-search-forms_select {
+      width: 100%;
+      height: 46px;
+      border: 1px solid #deddde;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      font-size: 16px;
+      color: #484e52;
+      background: #fff;
+      font-family: Ubuntu, Helvetica, Arial, sans-serif;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: border-color 0.2s;
+    }
+
+    .hx-search-forms_text-input:hover,
+    .hx-search-forms_text-input:focus,
+    .hx-search-forms_select:hover,
+    .hx-search-forms_select:focus {
+      border-color: #afafaf;
+      outline: none;
+    }
+
+    .hx-search-forms_text-input:focus,
+    .hx-search-forms_select:focus {
+      box-shadow: inset 0 0 0 4px rgba(46,154,193,.2);
+    }
+
+    .hx-search-forms_text-input::placeholder {
+      color: #aaa;
+    }
+
+    .hx-search-forms_select {
+      background: url(//static1.holidayextras.com/images/hx-ppc/dd-arrow.png) center right 9px no-repeat #fff;
+      background-size: 11px;
+      padding-right: 35px;
+    }
+
+    .hx-search-forms_select::-ms-expand {
+      display: none;
+    }
+
+    .hx-search-forms_button {
+      width: 100%;
+      height: 46px;
+      border: 1px solid #c74c28;
+      background: #c74c28;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: Ubuntu, Helvetica, Arial, sans-serif;
+      transition: background-color 0.2s;
+      margin-top: 10px;
+    }
+
+    .hx-search-forms_button:hover {
+      background: #9d3c1f;
+      border-color: #9d3c1f;
+    }
+
+    .hx-search-forms_button:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(46,154,193,.2);
+    }
+
+    .hx-search-forms_button:disabled {
+      background: #ccc;
+      border-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Flight Lookup Section - Hidden by default */
+    .flight-section {
+      display: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #dfe3e5;
+    }
+
+    .flight-section.show {
+      display: block;
+    }
+
+    .flight-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #484e52;
+      margin-bottom: 15px;
+    }
+
+    .form-group-flight {
+      position: relative;
+    }
+
+    /* Flight Results Dropdown */
+    .flight-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 4px;
+      background: #fff;
+      border: 1px solid #deddde;
+      border-radius: 3px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
+    .flight-results.show {
+      display: block;
+    }
+
+    .flight-result-item {
+      padding: 12px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    .flight-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .flight-result-item:hover {
+      background: #f5f5f5;
+    }
+
+    .flight-result-item.selected {
+      background: #fff5f2;
+      border-left: 3px solid #c74c28;
+    }
+
+    .flight-result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .flight-code {
+      font-weight: 700;
+      color: #c74c28;
+      font-size: 16px;
+    }
+
+    .flight-times {
+      color: #484e52;
+      font-size: 14px;
+    }
+
+    .flight-route {
+      color: #767d7d;
+      font-size: 13px;
+    }
+
+    .flight-loading {
+      padding: 12px;
+      text-align: center;
+      color: #767d7d;
+      font-size: 14px;
+    }
+
+    /* USP Section */
+    .usp-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    @media (min-width: 768px) {
+      .usp-section {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .usp-card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .usp-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 15px;
+      fill: #c74c28;
+    }
+
+    .usp-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #484e52;
+      margin-bottom: 8px;
+    }
+
+    .usp-text {
+      font-size: 14px;
+      color: #767d7d;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      background: #fff;
+      padding: 30px 20px;
+      border-top: 1px solid #dfe3e5;
+      margin-top: 60px;
+    }
+
+    .footer-content {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      color: #767d7d;
+      font-size: 14px;
+    }
+
+    .footer a {
+      color: #0c79a1;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #2e9ac1;
+      text-decoration: underline;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 767px) {
+      .form-group-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .form-group-row .form-group:first-child {
+        margin-bottom: 20px;
+      }
+
+      .search-card-title {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+        <path d="m11.5 84.3c-0.9 0-1.7-0.6-1.9-1.5l-9.1-36c-0.1-0.6 0-1.2 0.4-1.7 0.4-0.5 1-0.8 1.6-0.8h9.5c0.6 0 1.1 0.3 1.5 0.7l25.4 29.4c0.7 0.8 0.6 2.1-0.2 2.8-0.8 0.7-2.1 0.6-2.8-0.2l-24.8-28.7h-6l8.4 33.5c0.3 1.1-0.4 2.2-1.5 2.4-0.2 0-0.3 0.1-0.5 0.1z"></path><path d="m51.8 98.7c-3 0-5.5-2.5-5.5-5.5v-2.6c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5v2.6c0 3-2.5 5.5-5.5 5.5zm0-9.7c-0.8 0-1.5 0.7-1.5 1.5v2.6c0 0.8 0.7 1.5 1.5 1.5 0.8 0 1.5-0.7 1.5-1.5v-2.6c0-0.8-0.7-1.5-1.5-1.5z"></path><path d="m37.3 98.7c-3 0-5.5-2.5-5.5-5.5v-2.6c0-3 2.5-5.5 5.5-5.5 3 0 5.5 2.5 5.5 5.5v2.6c0 3-2.5 5.5-5.5 5.5zm0-9.7c-0.8 0-1.5 0.7-1.5 1.5v2.6c0 0.8 0.7 1.5 1.5 1.5 0.8 0 1.5-0.7 1.5-1.5v-2.6c0-0.8-0.7-1.5-1.5-1.5z"></path><path d="m58.1 110.9c-40 0-53.8-12-54.4-12.5-0.4-0.4-0.7-0.9-0.7-1.5v-10c0-0.6 0.2-1.1 0.7-1.5 0.6-0.5 14.4-12.5 54.4-12.5 1.1 0 2 0.9 2 2s-0.9 2-2 2c-33.7 0-47.9 8.7-51 11v8.1c3.1 2.2 17.5 11 51 11 1.1 0 2 0.9 2 2s-0.9 2-2 2z"></path><path d="m64.3 59c-3.7 0-7.3-1.5-9.9-4.1l-15.4-15.4c-2.6-2.6-4.1-6.1-4.1-9.9s1.5-7.3 4.1-9.9l15.4-15.4c2.6-2.6 6.2-4.1 9.9-4.1 3.7 0 7.3 1.5 9.9 4.1l15.4 15.4c2.6 2.6 4.1 6.1 4.1 9.9s-1.5 7.3-4.1 9.9l-15.4 15.4c-2.6 2.6-6.1 4.1-9.9 4.1zm0-54.7c-2.7 0-5.2 1-7.1 2.9l-15.4 15.4c-1.9 1.9-2.9 4.4-2.9 7.1s1 5.2 2.9 7.1l15.4 15.4c3.9 3.9 10.2 3.9 14.1 0l15.4-15.4c1.9-1.9 2.9-4.4 2.9-7.1s-1-5.2-2.9-7.1l-15.4-15.4c-1.9-1.9-4.4-2.9-7.1-2.9zm8.5 49.2h0 0z"></path><path d="m58.1 44.1c-1.1 0-2-0.9-2-2v-23.8c0-1.1 0.9-2 2-2h7.7c5.2 0 9.4 4.2 9.4 9.4s-4.2 9.4-9.4 9.4h-5.7v7c0 1.1-0.9 2-2 2zm2-13h5.7c3 0 5.4-2.4 5.4-5.4s-2.4-5.4-5.4-5.4h-5.7v10.8z"></path><path d="m64.1 125.3c-1.1 0-2-0.9-2-2v-64c0-1.1 0.9-2 2-2 1.1 0 2 0.9 2 2v64c0 1.1-0.9 2-2 2z"></path><path d="m122.4 110.7h-9c-1.1 0-2-0.9-2-2s0.9-2 2-2h9c0.8 0 1.5-0.7 1.5-1.5v-5.7c0-0.4-0.2-0.8-0.5-1.1l-2.7-2.5c-0.1 0-0.2 0-0.3 0l-18.3-3.8c-1.2-0.1-2.3-0.7-3-1.7l-14-13.4c-0.1-0.1-0.2-0.3-0.3-0.4l-14.7 0c-1.1 0-2-0.9-2-2s0.9-2 2-2h14.7c1.3 0 2.5 0.6 3.2 1.7l14 13.4c0.1 0.1 0.2 0.3 0.3 0.4 0.1 0 0.2 0 0.4 0l18.3 3.8c0.9 0.1 1.7 0.4 2.4 1l2.7 2.5c1.1 1 1.7 2.5 1.7 4v5.7c0 3-2.5 5.5-5.5 5.5z"></path><path d="m103.2 121.2c-6.7 0-12.2-5.5-12.2-12.2s5.5-12.2 12.2-12.2 12.2 5.5 12.2 12.2-5.5 12.2-12.2 12.2zm0-20.4c-4.5 0-8.2 3.7-8.2 8.2s3.7 8.2 8.2 8.2c4.5 0 8.2-3.7 8.2-8.2s-3.7-8.2-8.2-8.2z"></path><path d="m93.1 111.3h-23c-1.1 0-2-0.9-2-2s0.9-2 2-2h23c1.1 0 2 0.9 2 2s-0.9 2-2 2z"></path><path d="m125.1 126.3h-121c-1.1 0-2-0.9-2-2s0.9-2 2-2h121c1.1 0 2 0.9 2 2s-0.9 2-2 2z"></path><path d="m102.1 92.2h-17c-1.1 0-2-0.9-2-2s0.9-2 2-2h17c1.1 0 2 0.9 2 2s-0.9 2-2 2z"></path>
+      </svg>
+      <div class="brand-name">Holiday Extras</div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Search Card -->
+    <div class="search-card">
+      <h1 class="search-card-title">
+        <svg class="product-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+          <path d="m11.5 84.3c-0.9 0-1.7-0.6-1.9-1.5l-9.1-36c-0.1-0.6 0-1.2 0.4-1.7 0.4-0.5 1-0.8 1.6-0.8h9.5c0.6 0 1.1 0.3 1.5 0.7l25.4 29.4c0.7 0.8 0.6 2.1-0.2 2.8-0.8 0.7-2.1 0.6-2.8-0.2l-24.8-28.7h-6l8.4 33.5c0.3 1.1-0.4 2.2-1.5 2.4-0.2 0-0.3 0.1-0.5 0.1z"></path><path d="m51.8 98.7c-3 0-5.5-2.5-5.5-5.5v-2.6c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5v2.6c0 3-2.5 5.5-5.5 5.5zm0-9.7c-0.8 0-1.5 0.7-1.5 1.5v2.6c0 0.8 0.7 1.5 1.5 1.5 0.8 0 1.5-0.7 1.5-1.5v-2.6c0-0.8-0.7-1.5-1.5-1.5z"></path><path d="m37.3 98.7c-3 0-5.5-2.5-5.5-5.5v-2.6c0-3 2.5-5.5 5.5-5.5 3 0 5.5 2.5 5.5 5.5v2.6c0 3-2.5 5.5-5.5 5.5zm0-9.7c-0.8 0-1.5 0.7-1.5 1.5v2.6c0 0.8 0.7 1.5 1.5 1.5 0.8 0 1.5-0.7 1.5-1.5v-2.6c0-0.8-0.7-1.5-1.5-1.5z"></path><path d="m58.1 110.9c-40 0-53.8-12-54.4-12.5-0.4-0.4-0.7-0.9-0.7-1.5v-10c0-0.6 0.2-1.1 0.7-1.5 0.6-0.5 14.4-12.5 54.4-12.5 1.1 0 2 0.9 2 2s-0.9 2-2 2c-33.7 0-47.9 8.7-51 11v8.1c3.1 2.2 17.5 11 51 11 1.1 0 2 0.9 2 2s-0.9 2-2 2z"></path><path d="m64.3 59c-3.7 0-7.3-1.5-9.9-4.1l-15.4-15.4c-2.6-2.6-4.1-6.1-4.1-9.9s1.5-7.3 4.1-9.9l15.4-15.4c2.6-2.6 6.2-4.1 9.9-4.1 3.7 0 7.3 1.5 9.9 4.1l15.4 15.4c2.6 2.6 4.1 6.1 4.1 9.9s-1.5 7.3-4.1 9.9l-15.4 15.4c-2.6 2.6-6.1 4.1-9.9 4.1zm0-54.7c-2.7 0-5.2 1-7.1 2.9l-15.4 15.4c-1.9 1.9-2.9 4.4-2.9 7.1s1 5.2 2.9 7.1l15.4 15.4c3.9 3.9 10.2 3.9 14.1 0l15.4-15.4c1.9-1.9 2.9-4.4 2.9-7.1s-1-5.2-2.9-7.1l-15.4-15.4c-1.9-1.9-4.4-2.9-7.1-2.9zm8.5 49.2h0 0z"></path><path d="m58.1 44.1c-1.1 0-2-0.9-2-2v-23.8c0-1.1 0.9-2 2-2h7.7c5.2 0 9.4 4.2 9.4 9.4s-4.2 9.4-9.4 9.4h-5.7v7c0 1.1-0.9 2-2 2zm2-13h5.7c3 0 5.4-2.4 5.4-5.4s-2.4-5.4-5.4-5.4h-5.7v10.8z"></path><path d="m64.1 125.3c-1.1 0-2-0.9-2-2v-64c0-1.1 0.9-2 2-2 1.1 0 2 0.9 2 2v64c0 1.1-0.9 2-2 2z"></path><path d="m122.4 110.7h-9c-1.1 0-2-0.9-2-2s0.9-2 2-2h9c0.8 0 1.5-0.7 1.5-1.5v-5.7c0-0.4-0.2-0.8-0.5-1.1l-2.7-2.5c-0.1 0-0.2 0-0.3 0l-18.3-3.8c-1.2-0.1-2.3-0.7-3-1.7l-14-13.4c-0.1-0.1-0.2-0.3-0.3-0.4l-14.7 0c-1.1 0-2-0.9-2-2s0.9-2 2-2h14.7c1.3 0 2.5 0.6 3.2 1.7l14 13.4c0.1 0.1 0.2 0.3 0.3 0.4 0.1 0 0.2 0 0.4 0l18.3 3.8c0.9 0.1 1.7 0.4 2.4 1l2.7 2.5c1.1 1 1.7 2.5 1.7 4v5.7c0 3-2.5 5.5-5.5 5.5z"></path><path d="m103.2 121.2c-6.7 0-12.2-5.5-12.2-12.2s5.5-12.2 12.2-12.2 12.2 5.5 12.2 12.2-5.5 12.2-12.2 12.2zm0-20.4c-4.5 0-8.2 3.7-8.2 8.2s3.7 8.2 8.2 8.2c4.5 0 8.2-3.7 8.2-8.2s-3.7-8.2-8.2-8.2z"></path><path d="m93.1 111.3h-23c-1.1 0-2-0.9-2-2s0.9-2 2-2h23c1.1 0 2 0.9 2 2s-0.9 2-2 2z"></path><path d="m125.1 126.3h-121c-1.1 0-2-0.9-2-2s0.9-2 2-2h121c1.1 0 2 0.9 2 2s-0.9 2-2 2z"></path><path d="m102.1 92.2h-17c-1.1 0-2-0.9-2-2s0.9-2 2-2h17c1.1 0 2 0.9 2 2s-0.9 2-2 2z"></path>
+        </svg>
+        <span id="searchCardTitle">Search Airport Parking</span>
+      </h1>
+
+      <form id="searchForm">
+        <div class="form-group-row">
+          <div class="form-group">
+            <label class="hx-search-forms_label" for="outDate">Drop-off Date</label>
+            <input
+              type="date"
+              id="outDate"
+              class="hx-search-forms_text-input"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="hx-search-forms_label" for="outTime">Drop-off Time</label>
+            <select id="outTime" class="hx-search-forms_select" required>
+              <option value="00%3A00">00:00</option>
+              <option value="01%3A00">01:00</option>
+              <option value="02%3A00">02:00</option>
+              <option value="03%3A00">03:00</option>
+              <option value="04%3A00">04:00</option>
+              <option value="05%3A00">05:00</option>
+              <option value="06%3A00" selected>06:00</option>
+              <option value="07%3A00">07:00</option>
+              <option value="08%3A00">08:00</option>
+              <option value="09%3A00">09:00</option>
+              <option value="10%3A00">10:00</option>
+              <option value="11%3A00">11:00</option>
+              <option value="12%3A00">12:00</option>
+              <option value="13%3A00">13:00</option>
+              <option value="14%3A00">14:00</option>
+              <option value="15%3A00">15:00</option>
+              <option value="16%3A00">16:00</option>
+              <option value="17%3A00">17:00</option>
+              <option value="18%3A00">18:00</option>
+              <option value="19%3A00">19:00</option>
+              <option value="20%3A00">20:00</option>
+              <option value="21%3A00">21:00</option>
+              <option value="22%3A00">22:00</option>
+              <option value="23%3A00">23:00</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label class="hx-search-forms_label" for="inDate">Collection Date</label>
+            <input
+              type="date"
+              id="inDate"
+              class="hx-search-forms_text-input"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="hx-search-forms_label" for="inTime">Collection Time</label>
+            <select id="inTime" class="hx-search-forms_select" required>
+              <option value="00%3A00">00:00</option>
+              <option value="01%3A00">01:00</option>
+              <option value="02%3A00">02:00</option>
+              <option value="03%3A00">03:00</option>
+              <option value="04%3A00">04:00</option>
+              <option value="05%3A00">05:00</option>
+              <option value="06%3A00">06:00</option>
+              <option value="07%3A00">07:00</option>
+              <option value="08%3A00">08:00</option>
+              <option value="09%3A00">09:00</option>
+              <option value="10%3A00">10:00</option>
+              <option value="11%3A00">11:00</option>
+              <option value="12%3A00" selected>12:00</option>
+              <option value="13%3A00">13:00</option>
+              <option value="14%3A00">14:00</option>
+              <option value="15%3A00">15:00</option>
+              <option value="16%3A00">16:00</option>
+              <option value="17%3A00">17:00</option>
+              <option value="18%3A00">18:00</option>
+              <option value="19%3A00">19:00</option>
+              <option value="20%3A00">20:00</option>
+              <option value="21%3A00">21:00</option>
+              <option value="22%3A00">22:00</option>
+              <option value="23%3A00">23:00</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Flight Lookup Section - Appears after dates are selected -->
+        <div id="flightSection" class="flight-section">
+          <div class="flight-section-title">Add your flight <span class="hx-search-forms_label-optional">(optional)</span></div>
+
+          <div class="form-group form-group-flight">
+            <label class="hx-search-forms_label" for="flightCode">Flight Number</label>
+            <input
+              type="text"
+              id="flightCode"
+              class="hx-search-forms_text-input"
+              placeholder="e.g. BA123"
+              autocomplete="off"
+            >
+            <div id="flightResults" class="flight-results"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="hx-search-forms_button">Search Parking</button>
+      </form>
+    </div>
+
+    <!-- USP Section -->
+    <div class="usp-section">
+      <div class="usp-card">
+        <svg class="usp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <div class="usp-title">Best Price Guarantee</div>
+        <div class="usp-text">Find it cheaper elsewhere and we'll refund the difference</div>
+      </div>
+
+      <div class="usp-card">
+        <svg class="usp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <div class="usp-title">Secure Booking</div>
+        <div class="usp-text">Your payment is protected with industry-standard encryption</div>
+      </div>
+
+      <div class="usp-card">
+        <svg class="usp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <div class="usp-title">Flexible Bookings</div>
+        <div class="usp-text">Free amendments up to 24 hours before your arrival</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-content">
+      <p>&copy; 2026 Holiday Extras. All rights reserved.</p>
+      <p style="margin-top: 10px;">
+        <a href="https://www.holidayextras.com/terms">Terms & Conditions</a> |
+        <a href="https://www.holidayextras.com/privacy">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Airport name lookup
+    const AIRPORT_NAMES = {
+      LHR: "Heathrow", LGW: "Gatwick", MAN: "Manchester", STN: "Stansted",
+      LTN: "Luton", BHX: "Birmingham", EDI: "Edinburgh", BRS: "Bristol",
+      NCL: "Newcastle", LBA: "Leeds Bradford", EMA: "East Midlands",
+      LPL: "Liverpool", GLA: "Glasgow", EXT: "Exeter", LCY: "London City",
+    };
+    const DEFAULT_AIRPORT = "Airport";
+
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const departCode = (urlParams.get("Location") || urlParams.get("location") || "").toUpperCase();
+    const airportName = AIRPORT_NAMES[departCode] || DEFAULT_AIRPORT;
+    const agent = urlParams.get("agent") || "WY992";
+    const flightParam = urlParams.get("flight") || "default";
+    const adcode = urlParams.get("adcode") || "";
+    const promotionCode = urlParams.get("promotionCode") || "";
+
+    // Update page title and headings with airport name
+    document.title = `${airportName} Parking`;
+    document.getElementById("searchCardTitle").textContent = `Search ${airportName} Parking`;
+
+    // Date helper functions
+    function datePlus(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return d.toISOString().split("T")[0];
+    }
+
+    function dateStrPlus(dateStr, days) {
+      const d = new Date(dateStr);
+      d.setDate(d.getDate() + days);
+      return d.toISOString().split("T")[0];
+    }
+
+    // Set default dates
+    const defaultOutDate = datePlus(1);       // tomorrow
+    const defaultInDate = datePlus(1 + 8);    // outDate + 8 days
+
+    document.getElementById("outDate").value = defaultOutDate;
+    document.getElementById("inDate").value = defaultInDate;
+
+    // Track if user manually changed inDate
+    let inDateManuallyChanged = false;
+    document.getElementById("inDate").addEventListener("change", function() {
+      inDateManuallyChanged = true;
+    });
+
+    // Show flight section after dates are selected
+    const flightSection = document.getElementById("flightSection");
+    const outDateInput = document.getElementById("outDate");
+    const inDateInput = document.getElementById("inDate");
+
+    function checkDatesAndShowFlight() {
+      if (outDateInput.value && inDateInput.value) {
+        flightSection.classList.add("show");
+      }
+    }
+
+    outDateInput.addEventListener("change", function() {
+      // Recalculate inDate if user hasn't manually changed it
+      if (!inDateManuallyChanged) {
+        const newInDate = dateStrPlus(this.value, 8);
+        document.getElementById("inDate").value = newInDate;
+      }
+      checkDatesAndShowFlight();
+    });
+
+    inDateInput.addEventListener("change", checkDatesAndShowFlight);
+
+    // Check on load in case dates are pre-filled
+    checkDatesAndShowFlight();
+
+    // Flight lookup functionality
+    let flightLookupTimeout;
+    let selectedFlightCode = "";
+    const flightInput = document.getElementById("flightCode");
+    const flightResults = document.getElementById("flightResults");
+
+    flightInput.addEventListener("input", function() {
+      const query = this.value.trim();
+
+      clearTimeout(flightLookupTimeout);
+
+      if (query.length < 2) {
+        flightResults.classList.remove("show");
+        return;
+      }
+
+      flightLookupTimeout = setTimeout(async function() {
+        const flightDate = document.getElementById("outDate").value;
+
+        flightResults.innerHTML = '<div class="flight-loading">Searching flights...</div>';
+        flightResults.classList.add("show");
+
+        try {
+          const response = await fetch(`https://api.holidayextras.com/v1/flight?flight=${query}&departDate=${flightDate}&location=${departCode || ''}`);
+          const flights = await response.json();
+
+          if (!flights || flights.length === 0) {
+            flightResults.innerHTML = '<div class="flight-loading">No flights found</div>';
+            return;
+          }
+
+          let html = '';
+          flights.forEach(f => {
+            const code = (f.flight && f.flight.code) || "";
+            const airline = (f.flight && f.flight.carrier && f.flight.carrier.name) || "";
+            const depTime = (f.departure && f.departure.time) || "";
+            const arrTime = (f.arrival && f.arrival.time) || "";
+            const depIata = (f.departure && f.departure.airport_iata) || "";
+            const arrIata = (f.arrival && f.arrival.airport_iata) || "";
+            const depAirport = (f.departure && f.departure.airport) || depIata;
+            const arrAirport = (f.arrival && f.arrival.airport) || arrIata;
+
+            html += `
+              <div class="flight-result-item" data-code="${code}">
+                <div class="flight-result-header">
+                  <div class="flight-code">${code}</div>
+                  <div class="flight-times">${depTime} → ${arrTime}</div>
+                </div>
+                <div class="flight-route">${airline ? airline + ' • ' : ''}${depAirport} → ${arrAirport}</div>
+              </div>
+            `;
+          });
+
+          flightResults.innerHTML = html;
+
+          // Add click handlers
+          document.querySelectorAll(".flight-result-item").forEach(item => {
+            item.addEventListener("click", function() {
+              const code = this.getAttribute("data-code");
+              selectedFlightCode = code;
+              flightInput.value = code;
+              flightResults.classList.remove("show");
+            });
+          });
+        } catch (error) {
+          flightResults.innerHTML = '<div class="flight-loading">Error searching flights</div>';
+          console.error(error);
+        }
+      }, 500);
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function(e) {
+      if (!flightInput.contains(e.target) && !flightResults.contains(e.target)) {
+        flightResults.classList.remove("show");
+      }
+    });
+
+    // Form submission
+    document.getElementById("searchForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const outDate = document.getElementById("outDate").value;
+      const outTime = document.getElementById("outTime").value;
+      const inDate = document.getElementById("inDate").value;
+      const inTime = document.getElementById("inTime").value;
+      const flightCode = selectedFlightCode || flightParam;
+
+      // Build search URL - always use holidayextras.com domain
+      const host = window.location.host;
+      const isLocal = host.startsWith("127") || host.includes("github.io");
+      const basedomain = isLocal
+        ? "www.holidayextras.com"
+        : host.replace("www", "app");
+
+      const searchUrl = `https://${basedomain}/static/?selectProduct=cp&#/categories?agent=${agent}&ppts=&customer_ref=&lang=en&adults=2&depart=${departCode || 'LGW'}&terminal=&arrive=&flight=${flightCode}&in=${inDate}&out=${outDate}&park_from=${outTime}&park_to=${inTime}&filter_meetandgreet=&filter_parkandride=&children=0&infants=0&redirectReferal=carpark&from_categories=true&adcode=${adcode}&promotionCode=${promotionCode}`;
+
+      window.location.href = searchUrl;
+    });
+  </script>
+</body>
+</html>
