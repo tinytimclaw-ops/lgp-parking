@@ -701,9 +701,11 @@
     let selectedDestination = null;
 
     function checkDatesAndShowDestination() {
-      if (outDateInput.value && inDateInput.value && departCode) {
+      if (outDateInput.value && inDateInput.value) {
         destinationSection.classList.add("show");
-        loadDestinations();
+        if (departCode) {
+          loadDestinations();
+        }
       }
     }
 
