@@ -25,6 +25,19 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  fill: #fff;
+  flex-shrink: 0;
+}
+
 .site-title {
   font-size: 24px;
   font-weight: 700;
