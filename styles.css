@@ -20,13 +20,18 @@ body {
 
 /* Header */
 .header {
-  background: #fff;
-  padding: 15px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: #c74c28;
+  padding: 20px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-.header-logo svg {
-  display: block;
+.site-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Hero */

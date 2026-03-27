@@ -23,6 +23,12 @@ function initializeAirportName() {
   // Update page title
   document.title = `${airportName} Parking`;
 
+  // Update site title in header
+  const siteTitle = document.getElementById('siteTitle');
+  if (siteTitle) {
+    siteTitle.textContent = `${airportName} Parking`;
+  }
+
   // Update hero title
   const heroTitle = document.getElementById('heroTitle');
   if (heroTitle) {
