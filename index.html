@@ -54,19 +54,17 @@
       text-decoration: none;
     }
 
-    .header-logo img {
-      height: 40px;
-      width: auto;
-    }
-
-    .header-text {
-      font-size: 14px;
-      color: rgba(255,255,255,0.9);
+    .header-logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
     }
 
     .header-tagline {
-      font-size: 12px;
-      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      margin-top: 2px;
     }
 
     /* Notice Bar */
@@ -482,26 +480,24 @@
   <header class="header">
     <div class="container">
       <div class="header-content">
-        <a href="#" class="header-logo">
-          <img src="https://static1.holidayextras.com/images/hx-rebrand/hx-logo-white.svg" alt="Holiday Extras">
-          <div>
-            <div class="header-tagline">Compare and book with Holiday Extras</div>
-          </div>
-        </a>
+        <div class="header-logo">
+          <div class="header-logo-text">Airport Parking</div>
+          <div class="header-tagline" id="headerAirportName">Book at Airport</div>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- Notice Bar -->
   <div class="notice-bar">
-    This site is operated by Holiday Extras and is not the official website of <span id="airportNameNotice">Airport</span> or MAG.
+    This site is not the official website of <span id="airportNameNotice">Airport</span> or MAG.
   </div>
 
   <!-- Hero -->
   <section class="hero">
     <div class="container">
       <h1 class="hero-title" id="heroTitle">Airport Parking</h1>
-      <p class="hero-subtitle">Compare airport parking, hotel and parking and trusted parking options with Holiday Extras.</p>
+      <p class="hero-subtitle">Compare airport parking, hotel and parking and trusted parking options.</p>
     </div>
   </section>
 
@@ -619,7 +615,7 @@
   <section class="products-section">
     <div class="container">
       <h2 class="section-title" id="productsTitle">Search Airport parking options</h2>
-      <p class="section-subtitle">Compare airport parking, hotel and parking and trusted parking options with Holiday Extras.</p>
+      <p class="section-subtitle">Compare airport parking, hotel and parking and trusted parking options.</p>
 
       <div class="product-cards">
         <!-- Popular Option -->
@@ -703,9 +699,9 @@
         <a href="#" class="footer-link">Privacy Policy</a>
         <a href="#" class="footer-link">Never</a>
       </div>
-      <p class="footer-text">This site is operated by Holiday Extras and is not the official website of <span id="airportNameFooter">Airport</span> or MAG.</p>
-      <p class="footer-text">Products provided by Holiday Extras are not run by the airport / MAG. Other products at the airport are run through Holiday Extras.</p>
-      <p class="footer-text">&copy; 2026 Holiday Extras. All rights reserved.</p>
+      <p class="footer-text">This site is not the official website of <span id="airportNameFooter">Airport</span> or MAG.</p>
+      <p class="footer-text">Products provided are not run by the airport / MAG.</p>
+      <p class="footer-text">&copy; 2026 All rights reserved.</p>
     </div>
   </footer>
 
@@ -756,6 +752,7 @@
     window.addEventListener('DOMContentLoaded', function() {
       // Update page title and headings with airport name
       document.title = `${airportName} Parking`;
+      document.getElementById('headerAirportName').textContent = `Book at ${airportName} Airport`;
       document.getElementById('heroTitle').textContent = `${airportName} Parking`;
       document.getElementById('searchTitle').textContent = `Search ${airportName} parking`;
       document.getElementById('productsTitle').textContent = `Search ${airportName} Airport parking options`;
