@@ -54,10 +54,9 @@
       text-decoration: none;
     }
 
-    .header-logo svg {
-      width: 32px;
-      height: 32px;
-      fill: #fff;
+    .header-logo img {
+      height: 40px;
+      width: auto;
     }
 
     .header-text {
@@ -484,12 +483,8 @@
     <div class="container">
       <div class="header-content">
         <a href="#" class="header-logo">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" aria-hidden="true">
-            <path d="m11.5 84.3c-0.9 0-1.7-0.6-1.9-1.5l-9.1-36c-0.1-0.6 0-1.2 0.4-1.7 0.4-0.5 1-0.8 1.6-0.8h9.5c0.6 0 1.1 0.3 1.5 0.7l25.4 29.4c0.7 0.8 0.6 2.1-0.2 2.8-0.8 0.7-2.1 0.6-2.8-0.2l-24.8-28.7h-6l8.4 33.5c0.3 1.1-0.4 2.2-1.5 2.4-0.2 0-0.3 0.1-0.5 0.1z"></path>
-            <path d="m51.8 98.7c-3 0-5.5-2.5-5.5-5.5v-2.6c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5v2.6c0 3-2.5 5.5-5.5 5.5zm0-9.7c-0.8 0-1.5 0.7-1.5 1.5v2.6c0 0.8 0.7 1.5 1.5 1.5 0.8 0 1.5-0.7 1.5-1.5v-2.6c0-0.8-0.7-1.5-1.5-1.5z"></path>
-          </svg>
+          <img src="https://static1.holidayextras.com/images/hx-rebrand/hx-logo-white.svg" alt="Holiday Extras">
           <div>
-            <div class="header-text"><strong>HOLIDAY EXTRAS</strong></div>
             <div class="header-tagline">Compare and book with Holiday Extras</div>
           </div>
         </a>
@@ -603,13 +598,6 @@
               </div>
             </div>
 
-            <!-- Terminal -->
-            <div class="form-group form-group--full">
-              <label class="form-label" for="terminal">Terminal</label>
-              <select id="terminal" name="terminal" class="form-control">
-                <option value="">Show all</option>
-              </select>
-            </div>
           </div>
 
           <button type="submit" class="btn-primary">Search parking</button>
@@ -820,20 +808,19 @@
         const inDate = inDateInput.value;
         const outTime = document.getElementById('outTime').value;
         const inTime = document.getElementById('inTime').value;
-        const terminal = document.getElementById('terminal').value;
 
         if (!formDepart) {
           alert('Please select an airport');
           return;
         }
 
-        // Domain resolution (LGP: www → app on live)
+        // Domain resolution (LGP)
         const host = window.location.host;
         const isLocal = host.startsWith('127') || host.includes('github.io');
-        const basedomain = isLocal ? 'www.holidayextras.com' : host.replace('www', 'app');
+        const basedomain = isLocal ? 'www.holidayextras.com' : host;
 
         // Assemble search URL
-        const searchURL = `https://${basedomain}/static/?selectProduct=cp#/categories?agent=${agent}&ppts=&customer_ref=&lang=en&adults=2&depart=${formDepart}&terminal=${terminal}&arrive=&flight=${flight}&in=${inDate}&out=${outDate}&park_from=${outTime}&park_to=${inTime}&filter_meetandgreet=&filter_parkandride=&children=0&infants=0&redirectReferal=carpark&from_categories=true&adcode=${adcode}&promotionCode=${promotionCode}`;
+        const searchURL = `https://${basedomain}/static/?selectProduct=cp#/categories?agent=${agent}&ppts=&customer_ref=&lang=en&adults=2&depart=${formDepart}&terminal=&arrive=&flight=${flight}&in=${inDate}&out=${outDate}&park_from=${outTime}&park_to=${inTime}&filter_meetandgreet=&filter_parkandride=&children=0&infants=0&redirectReferal=carpark&from_categories=true&adcode=${adcode}&promotionCode=${promotionCode}`;
 
         // Redirect
         window.location.href = searchURL;
